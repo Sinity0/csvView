@@ -34,7 +34,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		89A827B02CFF9C7B00C10329 /* Exceptions for "cvsViewer" folder in "cvsViewer" target */ = {
+		89A8293C2D04987400C10329 /* Exceptions for "cvsViewer" folder in "cvsViewer" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -48,7 +48,7 @@
 			);
 			target = 89A827872CFF9C7800C10329 /* cvsViewer */;
 		};
-		89A828702D03A86200C10329 /* Exceptions for "cvsViewer" folder in "cvsViewerTests" target */ = {
+		89A8293E2D04A39C00C10329 /* Exceptions for "cvsViewer" folder in "cvsViewerTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/TestData/empty.csv,
@@ -67,8 +67,8 @@
 		89A8278A2CFF9C7800C10329 /* cvsViewer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				89A827B02CFF9C7B00C10329 /* Exceptions for "cvsViewer" folder in "cvsViewer" target */,
-				89A828702D03A86200C10329 /* Exceptions for "cvsViewer" folder in "cvsViewerTests" target */,
+				89A8293C2D04987400C10329 /* Exceptions for "cvsViewer" folder in "cvsViewer" target */,
+				89A8293E2D04A39C00C10329 /* Exceptions for "cvsViewer" folder in "cvsViewerTests" target */,
 			);
 			path = cvsViewer;
 			sourceTree = "<group>";

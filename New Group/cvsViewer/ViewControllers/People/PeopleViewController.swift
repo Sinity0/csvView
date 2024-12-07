@@ -16,7 +16,7 @@ final class PeopleViewController: UIViewController {
     private let viewModel = PeopleViewModel()
     private var progressViewController: ProgressViewController?
     private var selectedFileURL: URL?
-    private var emptyStateView = EmptyStateView()
+    private var emptyStateView: EmptyStateView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +40,6 @@ private extension PeopleViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        view.addSubview(emptyStateView)
         layout()
     }
     
@@ -71,44 +70,53 @@ private extension PeopleViewController {
             make.width.equalToSuperview()
         }
         
-        emptyStateView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
         var previousView: UIView?
         
         let contents = assembly.prepareContent()
         
-        emptyStateView.isHidden = !viewModel.people.isEmpty
-        
-        for content in contents {
-            guard let controller = assembly.controller(for: content, viewModel: viewModel) else {
-                continue
-            }
-            
-            addChild(controller)
-            contentView.addSubview(controller.view)
-            controller.didMove(toParent: self)
-            
-            controller.view.snp.makeConstraints { make in
-                make.left.right.equalToSuperview()
-                if let previousView = previousView {
-                    make.top.equalTo(previousView.snp.bottom).offset(16)
-                } else {
-                    make.top.equalToSuperview().offset(16)
+        if viewModel.people.isEmpty {
+            showEmptyState()
+        } else {
+            for content in contents {
+                guard let controller = assembly.controller(for: content, viewModel: viewModel) else {
+                    continue
                 }
-                make.height.equalTo(300)
+                
+                addChild(controller)
+                contentView.addSubview(controller.view)
+                controller.didMove(toParent: self)
+                
+                controller.view.snp.makeConstraints { make in
+                    make.left.right.equalToSuperview()
+                    if let previousView = previousView {
+                        make.top.equalTo(previousView.snp.bottom).offset(16)
+                    } else {
+                        make.top.equalToSuperview().offset(16)
+                    }
+                    make.height.equalTo(300)
+                }
+                
+                previousView = controller.view
             }
-            
-            previousView = controller.view
         }
-        
         
         if let previousView = previousView {
             contentView.snp.makeConstraints { make in
                 make.bottom.equalTo(previousView.snp.bottom).offset(16)
             }
         }
+    }
+    
+    func showEmptyState() {
+        let emptyView = EmptyStateView()
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyView)
+        
+        emptyView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        self.emptyStateView = emptyView
     }
     
     func startParsing(url: URL) {
@@ -129,17 +137,8 @@ private extension PeopleViewController {
         
         viewModel.onDataUpdated = { [weak self] in
             self?.progressViewController?.dismiss(animated: true, completion: {
-                self?.updateComponents()
-                if self?.viewModel.people.isEmpty ?? false {
-                    let alert = UIAlertController(
-                        title: nil,
-                        message: "Looks like file is empty. Try another one.",
-                        preferredStyle: .alert
-                    )
-                    
-                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    alert.addAction(okAction)
-                    self?.present(alert, animated: true, completion: nil)
+                if self?.viewModel.people.isEmpty == false {
+                    self?.updateComponents()
                 }
             })
         }
@@ -152,7 +151,8 @@ private extension PeopleViewController {
             component.dataDidUpdate()
         }
         
-        emptyStateView.isHidden = !viewModel.people.isEmpty
+        emptyStateView?.removeFromSuperview()
+        emptyStateView = nil
     }
 }
 
