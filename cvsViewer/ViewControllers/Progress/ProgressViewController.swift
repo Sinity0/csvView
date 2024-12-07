@@ -38,15 +38,17 @@ final class ProgressViewController: UIViewController {
 
 private extension ProgressViewController {
     func setup() {
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        containerView.backgroundColor = .systemBackground
+        containerView.backgroundColor = .darkGray
         containerView.layer.cornerRadius = 10
         view.addSubview(containerView)
         
+        progressView.trackTintColor = .lightGray
+        progressView.progressTintColor = .white
         containerView.addSubview(progressView)
         containerView.addSubview(cancelButton)
         
         cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.setTitleColor(.white, for: .normal)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         layout()
     }

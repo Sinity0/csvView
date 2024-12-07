@@ -10,11 +10,14 @@ import SnapKit
 import SwiftUI
 
 final class PeopleViewController: UIViewController {
+    weak var coordinator: PeopleCoordinator?
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let assembly = PeopleAssembly()
     private let viewModel = PeopleViewModel()
     private var selectedFileURL: URL?
+    
     private lazy var emptyStateView: EmptyStateView = {
         let emptyState = EmptyStateView()
         view.addSubview(emptyState)
