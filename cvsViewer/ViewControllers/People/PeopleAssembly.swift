@@ -9,9 +9,9 @@ import UIKit
 
 final class PeopleAssembly {
     enum Content: String, CaseIterable {
-        case table
         case chart
         case pieChart
+        case table
     }
     
     private(set) var viewControllers: [Content: (UIViewController & PeopleViewModelConsumer)] = [:]
@@ -24,15 +24,15 @@ final class PeopleAssembly {
         var viewController: (UIViewController & PeopleViewModelConsumer)?
         
         switch content {
-        case .table:
-            let tableVC = PeopleTableViewController()
-            viewController = tableVC
         case .chart:
             let chartVC = IssueCountChartViewController()
             viewController = chartVC
         case .pieChart:
             let pieChartVC = IssueCountPieChartViewController()
             viewController = pieChartVC
+        case .table:
+            let tableVC = PeopleTableViewController()
+            viewController = tableVC
         }
         
         if let viewController = viewController {
