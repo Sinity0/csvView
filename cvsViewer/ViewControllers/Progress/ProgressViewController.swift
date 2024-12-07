@@ -24,6 +24,11 @@ final class ProgressViewController: UIViewController {
         onCancel?()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        progressView.setProgress(Float(0.0), animated: true)
+    }
+    
     func updateProgress(_ progress: Double) {
         progressView.setProgress(Float(progress), animated: true)
     }

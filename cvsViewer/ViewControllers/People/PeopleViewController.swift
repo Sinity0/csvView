@@ -14,9 +14,18 @@ final class PeopleViewController: UIViewController {
     private let contentView = UIView()
     private let assembly = PeopleAssembly()
     private let viewModel = PeopleViewModel()
-    private var progressViewController: ProgressViewController?
     private var selectedFileURL: URL?
-    private var emptyStateView = EmptyStateView()
+    private lazy var emptyStateView: EmptyStateView = {
+        let emptyState = EmptyStateView()
+        view.addSubview(emptyState)
+        return emptyState
+    }()
+    
+    private lazy var progressViewController: ProgressViewController = {
+        let progressVC = ProgressViewController()
+        progressVC.modalPresentationStyle = .overFullScreen
+        return progressVC
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +33,8 @@ final class PeopleViewController: UIViewController {
         setup()
         setupBindings()
     }
+    
+    //MARK: - Actions
     
     @objc private func openFilePicker() {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.commaSeparatedText])
@@ -40,7 +51,6 @@ private extension PeopleViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        view.addSubview(emptyStateView)
         layout()
     }
     
@@ -51,14 +61,14 @@ private extension PeopleViewController {
     }
     
     func setupNavigationBar() {
-        title = "People"
+        title = ".csv Visualizer"
         let image = UIImage(systemName: "folder")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: image,
-            style: .plain,
-            target: self,
-            action: #selector(openFilePicker)
-        )
+        let barButton = UIBarButtonItem(image: image,
+                                        style: .plain,
+                                        target: self,
+                                        action: #selector(openFilePicker))
+        barButton.accessibilityIdentifier = "openFilePickerButton"
+        navigationItem.rightBarButtonItem = barButton
     }
     
     func layout() {
@@ -76,9 +86,7 @@ private extension PeopleViewController {
         }
         
         var previousView: UIView?
-        
         let contents = assembly.prepareContent()
-        
         emptyStateView.isHidden = !viewModel.people.isEmpty
         
         for content in contents {
@@ -103,7 +111,6 @@ private extension PeopleViewController {
             previousView = controller.view
         }
         
-        
         if let previousView = previousView {
             contentView.snp.makeConstraints { make in
                 make.bottom.equalTo(previousView.snp.bottom).offset(16)
@@ -112,34 +119,24 @@ private extension PeopleViewController {
     }
     
     func startParsing(url: URL) {
-        let progressVC = ProgressViewController()
-        progressVC.modalPresentationStyle = .overFullScreen
-        progressVC.onCancel = { [weak self] in
+        progressViewController.onCancel = { [weak self] in
             self?.viewModel.cancelParsing()
-            self?.progressViewController?.dismiss(animated: true, completion: nil)
+            self?.progressViewController.dismiss(animated: true, completion: nil)
         }
-        present(progressVC, animated: true, completion: nil)
-        self.progressViewController = progressVC
+        
+        present(progressViewController, animated: true, completion: nil)
         
         viewModel.onProgressUpdated = { [weak self] progress in
             DispatchQueue.main.async {
-                self?.progressViewController?.updateProgress(progress)
+                self?.progressViewController.updateProgress(progress)
             }
         }
         
         viewModel.onDataUpdated = { [weak self] in
-            self?.progressViewController?.dismiss(animated: true, completion: {
-                self?.updateComponents()
+            self?.updateComponents()
+            self?.progressViewController.dismiss(animated: true, completion: {
                 if self?.viewModel.people.isEmpty ?? false {
-                    let alert = UIAlertController(
-                        title: nil,
-                        message: "Looks like file is empty. Try another one.",
-                        preferredStyle: .alert
-                    )
-                    
-                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    alert.addAction(okAction)
-                    self?.present(alert, animated: true, completion: nil)
+                    self?.showErrorAlert(title: "Oops", message: "Looks like file is empty. Try another one.")
                 }
             })
         }
@@ -154,6 +151,14 @@ private extension PeopleViewController {
         
         emptyStateView.isHidden = !viewModel.people.isEmpty
     }
+    
+    //MARK: - Alerts
+    
+    func showErrorAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 //MARK: - UIDocumentPickerDelegate
@@ -166,9 +171,7 @@ extension PeopleViewController: UIDocumentPickerDelegate {
             self.selectedFileURL = url
             startParsing(url: url)
         } else {
-            let alert = UIAlertController(title: "Error", message: "Unable to access the selected file.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+            showErrorAlert(title: "Error", message: "Unable to access the selected file.")
         }
     }
 }
