@@ -38,8 +38,28 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Resources/TestData/empty.csv,
+				Resources/TestData/issues_invalid_dates.csv,
+				Resources/TestData/issues_large.csv,
+				Resources/TestData/issues_missing_fields.csv,
+				Resources/TestData/issues_no_new_line.csv,
+				Resources/TestData/issues_small.csv,
+				Resources/TestData/issues_valid.csv,
 			);
 			target = 89A827872CFF9C7800C10329 /* cvsViewer */;
+		};
+		89A828702D03A86200C10329 /* Exceptions for "cvsViewer" folder in "cvsViewerTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/TestData/empty.csv,
+				Resources/TestData/issues_invalid_dates.csv,
+				Resources/TestData/issues_large.csv,
+				Resources/TestData/issues_missing_fields.csv,
+				Resources/TestData/issues_no_new_line.csv,
+				Resources/TestData/issues_small.csv,
+				Resources/TestData/issues_valid.csv,
+			);
+			target = 89A8279D2CFF9C7B00C10329 /* cvsViewerTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -48,6 +68,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				89A827B02CFF9C7B00C10329 /* Exceptions for "cvsViewer" folder in "cvsViewer" target */,
+				89A828702D03A86200C10329 /* Exceptions for "cvsViewer" folder in "cvsViewerTests" target */,
 			);
 			path = cvsViewer;
 			sourceTree = "<group>";
@@ -474,9 +495,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CQRJ9376L4;
+				DEVELOPMENT_TEAM = H8VDGU6LR9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = if.cvsViewerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -493,9 +514,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CQRJ9376L4;
+				DEVELOPMENT_TEAM = H8VDGU6LR9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = if.cvsViewerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

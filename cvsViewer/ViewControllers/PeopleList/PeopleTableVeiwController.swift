@@ -23,13 +23,11 @@ final class PeopleTableViewController: UITableViewController, PeopleViewModelCon
     //MARK: -  UITableViewDataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count = viewModel?.numberOfPeople() ?? 0
-        print("Number of rows in section: \(count)")
-        return count
+        viewModel?.numberOfPeople() ?? 0
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 74
+        74
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -37,6 +35,7 @@ final class PeopleTableViewController: UITableViewController, PeopleViewModelCon
             let person = viewModel?.person(at: indexPath.row) else {
             return UITableViewCell()
         }
+        
         cell.configure(with: person)
         return cell
     }

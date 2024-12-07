@@ -22,7 +22,9 @@ final class CSVParser {
                   completion: @escaping ([Person]) -> Void) -> DispatchWorkItem {
         
         var workItem: DispatchWorkItem! = nil
-        workItem = DispatchWorkItem {
+        workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            
             var uniquePersons: [String: Person] = [:]
             
             guard let lineReader = LineReader(url: url) else {
@@ -38,8 +40,16 @@ final class CSVParser {
             let lineCountThreshold = 10000
             var lineCounter = 0
             
+            if workItem.isCancelled {
+                DispatchQueue.main.async {
+                    completion([])
+                }
+                return
+            }
+            
             for line in lineReader {
                 lineCounter += 1
+
                 if workItem.isCancelled {
                     DispatchQueue.main.async {
                         completion([])
@@ -103,9 +113,15 @@ final class CSVParser {
                 }
             }
             
-            let personsArray = Array(uniquePersons.values)
-            DispatchQueue.main.async {
-                completion(personsArray)
+            if !workItem.isCancelled {
+                let personsArray = Array(uniquePersons.values)
+                DispatchQueue.main.async {
+                    completion(personsArray)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completion([])
+                }
             }
         }
         
